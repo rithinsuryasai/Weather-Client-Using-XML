@@ -1,6 +1,3 @@
-// NAME:RITHIN SURYA SAINADH GADAPA UTA-ID:1001565680 
-package lab3;
-
 import java.io.IOException;
 import java.io.StringReader;
 import java.math.BigDecimal;
@@ -32,7 +29,6 @@ import gov.weather.graphical.xml.DWMLgen.wsdl.ndfdXML_wsdl.NdfdXMLBindingStub;
 
 /**
  * 
- * @author rithin surya sainadh gadapa 				uta-id:1001565680
  * description - This is a client program which takes inputs as latitude and longitude and returns the weather parameters
  * maximum temperature or minimum or dew point as specified in response xml and wind speed, wind direction, cloud amount and 12 hr probability.
  */
@@ -79,26 +75,26 @@ public class Client {
 		frame.setSize(800,400);
 		frame.getContentPane().setLayout(null);
 		frame.setTitle(title);	
-	
+		
 		frame.getContentPane().add(latitudeLabel);	
 		latitudeLabel.setBounds(10,10,80,20);		
 
-	
+		
 		frame.getContentPane().add(longitudeLabel); 
 		longitudeLabel.setBounds(200,10,80,20);		
 
-	
+		
 		frame.getContentPane().add(latitudefield);	
 		latitudefield.setBounds(90,10,80,20);
 
-	
+		
 		frame.getContentPane().add(longitudefield);	
 		longitudefield.setBounds(300,10,80,20);
 
 		frame.getContentPane().add(refresh); 
 		refresh.setBounds(15,350,200,25);
-	
-	    frame.getContentPane().add(info);
+		
+		frame.getContentPane().add(info);
 		info.setBounds(13,300,200,25);
 
 		Area.setColumns(100);
@@ -155,7 +151,7 @@ public class Client {
 		DocumentBuilder builder ;
 		InputSource source ;
 		Document document ;
-	    try{
+		try{
 	    	builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();  //default method for DOM parsing
 
 	    	source = new InputSource();  //specifying input source for parsing
@@ -169,24 +165,24 @@ public class Client {
 	    	String winddirection = document.getElementsByTagName("direction").item(0).getTextContent();	
 	    	String cloud = document.getElementsByTagName("cloud-amount").item(0).getTextContent();
 	    	String prob = document.getElementsByTagName("probability-of-precipitation").item(0).getTextContent();
-	    
+	    	
 	    	/**
 	    	 * in temperature tag many child elements are present.
 	    	 * By using a loop we are retrieving the minimum or maximum or dew point temperature
 	    	 */
 	    	NodeList nodes = document.getElementsByTagName("temperature") ;
 	    	for(int i=0; i<nodes.getLength(); i++){
-	    	
+	    		
 	    		String nodeValue = nodes.item(i).getAttributes().getNamedItem("type").getNodeValue() ;
 	    		if (nodeValue.equals( "dew point") || nodeValue.equals( "maximum") || nodeValue.equals( "minimum") )
 	    			Area.append(nodes.item(i).getTextContent()+"Fahrenheit\n");
-	    
+	    		
 	    	}
-	    
+	    	
 	    	Area.append(windspeed+"knots\n"+winddirection+"degrees\n"+cloud+"percent\n"+prob+"percent\n");
 	    }
 	    catch(NullPointerException e){
-			e.printStackTrace();
+	    	e.printStackTrace();
 	    }
 	}
 	
@@ -208,22 +204,22 @@ public class Client {
 			String getresponse;
 			try {
 				//the request to web server as attributes specified.
-					getresponse = bindingstub.NDFDgen(new BigDecimal(Double.parseDouble(getlatitutde())), 
-						new BigDecimal(Double.parseDouble(getlongitude())), productType, startTime, 
-						endTime, unitType, weatherParameterType);
+				getresponse = bindingstub.NDFDgen(new BigDecimal(Double.parseDouble(getlatitutde())), 
+					new BigDecimal(Double.parseDouble(getlongitude())), productType, startTime, 
+					endTime, unitType, weatherParameterType);
 				
-					System.out.println(getresponse);  
-					parseXml(getresponse);
+				System.out.println(getresponse);  
+				parseXml(getresponse);
 				
-				} catch (ParserConfigurationException | SAXException | IOException e1) {
-					e1.printStackTrace();
-				}
-			} catch (AxisFault e1) {
+			} catch (ParserConfigurationException | SAXException | IOException e1) {
 				e1.printStackTrace();
-			}finally{
-				//close of connection after every fetch
-				connection.disconnect();
 			}
+		} catch (AxisFault e1) {
+			e1.printStackTrace();
+		}finally{
+				//close of connection after every fetch
+			connection.disconnect();
+		}
 	}
 	/**
 	 * specifying all the input attributes for the request function NDFD generator
@@ -238,4 +234,3 @@ public class Client {
 		
 	}
 }
- 
